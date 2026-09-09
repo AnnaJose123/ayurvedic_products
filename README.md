@@ -155,7 +155,7 @@ python manage.py runserver
 ```
 
 Open your browser and visit:
-- **Website Home**: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- **Website Home**: [http://127.0.0.1:8000/](http://127.0.0.1:8001/)
 - **Django Admin Panel**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
 ---
