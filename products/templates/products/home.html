@@ -182,12 +182,18 @@
                 </span>
               </div>
 
-              <div class="product-card-actions">
-                <a href="{% url 'product_detail' slug=product.slug %}" class="btn-card-details">
-                  View Details
+              <div class="product-card-actions" style="display: flex; gap: 8px; align-items: center;">
+                <form action="{% url 'cart_add' product.id %}" method="post" style="margin: 0;">
+                  {% csrf_token %}
+                  <button type="submit" class="magnetic-btn" style="background: var(--color-forest); color: #FFFFFF; padding: 6px 14px; font-size: 0.85rem; border: none; cursor: pointer; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-cart-plus"></i> Add
+                  </button>
+                </form>
+                <a href="{% url 'product_detail' slug=product.slug %}" class="btn-card-details" style="padding: 6px 12px; font-size: 0.85rem;">
+                  Details
                 </a>
-                <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn-card-wa">
-                  <i class="fab fa-whatsapp"></i> WhatsApp
+                <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn-card-wa" style="padding: 6px 12px; font-size: 0.85rem;" title="Chat on WhatsApp">
+                  <i class="fab fa-whatsapp"></i>
                 </a>
               </div>
             </div>

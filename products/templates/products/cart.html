@@ -1,0 +1,147 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Your Shopping Cart | HerbaCare Ayurvedic Products{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 20px 90px;">
+  
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(199, 154, 75, 0.2); padding-bottom: 15px; flex-wrap: wrap; gap: 15px;">
+    <h1 style="font-family: var(--font-heading); color: var(--color-forest); font-size: 2.2rem; margin: 0; display: flex; align-items: center; gap: 12px;">
+      <i class="fas fa-shopping-cart" style="color: var(--color-brass);"></i> Shopping Cart
+    </h1>
+    <div>
+      <a href="{% url 'home' %}#products" class="magnetic-btn btn-outline" style="padding: 8px 18px; font-size: 0.9rem;">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+      </a>
+    </div>
+  </div>
+
+  {% if cart %}
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; align-items: flex-start;">
+      
+      <!-- Cart Items Table -->
+      <div style="background: rgba(246, 241, 226, 0.9); border: 1px solid rgba(199, 154, 75, 0.3); border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="border-bottom: 2px solid rgba(199, 154, 75, 0.3); text-align: left; color: var(--color-forest); font-family: var(--font-heading); font-size: 1rem;">
+              <th style="padding: 12px 10px;">Product</th>
+              <th style="padding: 12px 10px;">Price</th>
+              <th style="padding: 12px 10px;">Quantity</th>
+              <th style="padding: 12px 10px; text-align: right;">Total</th>
+              <th style="padding: 12px 10px; text-align: center;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart %}
+              <tr style="border-bottom: 1px solid rgba(199, 154, 75, 0.15);">
+                <!-- Product Details -->
+                <td style="padding: 18px 10px;">
+                  <div style="display: flex; gap: 15px; align-items: center;">
+                    {% if item.product.image %}
+                      <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    {% else %}
+                      <div style="width: 60px; height: 60px; background: rgba(46, 90, 39, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--color-forest);">
+                        <i class="fas fa-leaf"></i>
+                      </div>
+                    {% endif %}
+                    <div>
+                      <h4 style="margin: 0 0 4px 0; font-family: var(--font-heading); font-size: 1.05rem;">
+                        <a href="{% url 'product_detail' item.product.slug %}" style="color: var(--color-forest); text-decoration: none;">
+                          {{ item.product.name }}
+                        </a>
+                      </h4>
+                      <span style="font-size: 0.8rem; color: var(--color-deep-forest); opacity: 0.75; background: rgba(46, 90, 39, 0.08); padding: 2px 8px; border-radius: 10px;">
+                        {{ item.product.category }}
+                      </span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Price -->
+                <td style="padding: 18px 10px; font-weight: 600; color: var(--color-deep-forest);">
+                  ₹{{ item.price }}
+                </td>
+
+                <!-- Quantity Form -->
+                <td style="padding: 18px 10px;">
+                  <form method="post" action="{% url 'cart_update' item.product.id %}" style="display: flex; align-items: center; gap: 6px;">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="99" style="width: 55px; padding: 6px; border: 1px solid rgba(199, 154, 75, 0.4); border-radius: 6px; text-align: center; font-weight: 600;">
+                    <button type="submit" title="Update Quantity" style="background: rgba(46, 90, 39, 0.1); border: 1px solid rgba(46, 90, 39, 0.3); color: var(--color-forest); width: 32px; height: 32px; border-radius: 6px; cursor: pointer;">
+                      <i class="fas fa-sync-alt" style="font-size: 0.8rem;"></i>
+                    </button>
+                  </form>
+                </td>
+
+                <!-- Line Total -->
+                <td style="padding: 18px 10px; text-align: right; font-weight: 700; color: var(--color-forest); font-size: 1.05rem;">
+                  ₹{{ item.total_price }}
+                </td>
+
+                <!-- Delete -->
+                <td style="padding: 18px 10px; text-align: center;">
+                  <a href="{% url 'cart_remove' item.product.id %}" style="color: #c92a2a; font-size: 1.1rem; padding: 6px;" title="Remove Item">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div style="background: rgba(246, 241, 226, 0.95); border: 1px solid rgba(199, 154, 75, 0.3); border-radius: 16px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: sticky; top: 100px;">
+        <h3 style="font-family: var(--font-heading); color: var(--color-forest); margin: 0 0 20px 0; border-bottom: 1px solid rgba(199, 154, 75, 0.2); padding-bottom: 10px; font-size: 1.4rem;">
+          Order Summary
+        </h3>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--color-deep-forest); font-size: 0.95rem;">
+          <span>Total Items:</span>
+          <strong style="color: var(--color-forest);">{{ cart|length }} item(s)</strong>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--color-deep-forest); font-size: 0.95rem;">
+          <span>Estimated Delivery:</span>
+          <span style="color: #2b8a3e; font-weight: 600;">FREE (PAN India)</span>
+        </div>
+
+        <div style="border-top: 2px dashed rgba(199, 154, 75, 0.3); padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+          <span style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-forest);">Grand Total:</span>
+          <span style="font-size: 1.6rem; font-weight: 800; color: var(--color-brass);">₹{{ cart.get_total_price }}</span>
+        </div>
+
+        <!-- Checkout Buttons -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="{{ whatsapp_checkout_url }}" target="_blank" rel="noopener" class="magnetic-btn btn-whatsapp" style="padding: 14px; font-size: 1rem; justify-content: center; font-weight: 600; text-align: center; border-radius: 8px;">
+            <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Order via WhatsApp
+          </a>
+
+          <a href="{% url 'cart_checkout_enquiry' %}" class="magnetic-btn magnetic-btn-brass" style="padding: 14px; font-size: 1rem; justify-content: center; font-weight: 600; text-align: center; border-radius: 8px;">
+            <i class="fas fa-paper-plane"></i> Submit Order Enquiry
+          </a>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center; font-size: 0.82rem; color: var(--color-deep-forest); opacity: 0.85;">
+          <i class="fas fa-shield-alt" style="color: var(--color-forest);"></i> 100% Authentic Ayurvedic Herbal Products
+        </div>
+      </div>
+
+    </div>
+  {% else %}
+    <div style="background: rgba(246, 241, 226, 0.8); border: 2px dashed rgba(199, 154, 75, 0.3); border-radius: 16px; padding: 70px 20px; text-align: center;">
+      <div style="font-size: 3.5rem; color: var(--color-brass); margin-bottom: 15px;">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <h2 style="font-family: var(--font-heading); color: var(--color-forest); font-size: 1.8rem; margin-bottom: 10px;">Your Shopping Cart is Empty</h2>
+      <p style="color: var(--color-deep-forest); max-width: 480px; margin: 0 auto 25px; opacity: 0.85;">
+        Explore our authentic Ayurvedic personal care catalog and add natural herbal hair oils, face packs, serums, and teas to your cart!
+      </p>
+      <a href="{% url 'home' %}#products" class="magnetic-btn magnetic-btn-brass" style="padding: 14px 32px; font-size: 1.05rem;">
+        <i class="fas fa-leaf"></i> Browse Products Catalog
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

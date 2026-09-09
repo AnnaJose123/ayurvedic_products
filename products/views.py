@@ -4,7 +4,13 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Product, Enquiry, CATEGORY_CHOICES
 from .forms import EnquiryForm, CustomerRegistrationForm, CustomerLoginForm
-from .utils import generate_product_whatsapp_url, generate_enquiry_whatsapp_url, get_whatsapp_number
+from .utils import (
+    generate_product_whatsapp_url,
+    generate_enquiry_whatsapp_url,
+    generate_cart_whatsapp_url,
+    get_whatsapp_number
+)
+from .cart import Cart
 
 
 def home_view(request):
@@ -204,3 +210,127 @@ def my_enquiries_view(request):
     }
     return render(request, 'products/my_enquiries.html', context)
 
+
+# --------------------------------------------------------------------------
+# SHOPPING CART VIEWS
+# --------------------------------------------------------------------------
+
+def cart_detail_view(request):
+    """
+    Renders Shopping Cart page (`/cart/`) with items list and total order sum.
+    """
+    cart = Cart(request)
+    whatsapp_checkout_url = generate_cart_whatsapp_url(
+        cart,
+        customer_name=request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
+    )
+
+    context = {
+        'cart': cart,
+        'whatsapp_checkout_url': whatsapp_checkout_url,
+        'whatsapp_number': get_whatsapp_number(),
+    }
+    return render(request, 'products/cart.html', context)
+
+
+def cart_add_view(request, product_id):
+    """
+    Adds a product to the shopping cart.
+    Accepts quantity parameter via POST or GET (default 1).
+    """
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id, is_available=True)
+    
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+
+    cart.add(product=product, quantity=quantity)
+    messages.success(request, f"Added '{product.name}' (x{quantity}) to your shopping cart!")
+    
+    # Redirect back to referring page or cart
+    next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or 'cart_detail'
+    return redirect(next_url)
+
+
+def cart_remove_view(request, product_id):
+    """
+    Removes a product from the shopping cart.
+    """
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    cart.remove(product)
+    messages.info(request, f"Removed '{product.name}' from your cart.")
+    return redirect('cart_detail')
+
+
+def cart_update_view(request, product_id):
+    """
+    Updates the quantity of a product in the shopping cart directly.
+    """
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    
+    try:
+        quantity = int(request.POST.get('quantity', 1))
+    except (ValueError, TypeError):
+        quantity = 1
+
+    if quantity <= 0:
+        cart.remove(product)
+        messages.info(request, f"Removed '{product.name}' from your cart.")
+    else:
+        cart.add(product=product, quantity=quantity, override_quantity=True)
+        messages.success(request, f"Updated quantity for '{product.name}' to {quantity}.")
+
+    return redirect('cart_detail')
+
+
+def cart_checkout_whatsapp_view(request):
+    """
+    Generates itemized order details and redirects to WhatsApp click-to-chat.
+    """
+    cart = Cart(request)
+    if len(cart) == 0:
+        messages.error(request, "Your shopping cart is empty.")
+        return redirect('cart_detail')
+
+    customer_name = request.user.get_full_name() or request.user.username if request.user.is_authenticated else None
+    whatsapp_url = generate_cart_whatsapp_url(cart, customer_name=customer_name)
+    return redirect(whatsapp_url)
+
+
+def cart_checkout_enquiry_view(request):
+    """
+    Converts all items in the cart into a customer enquiry log and clears the cart.
+    """
+    cart = Cart(request)
+    if len(cart) == 0:
+        messages.error(request, "Your shopping cart is empty.")
+        return redirect('cart_detail')
+
+    # Build summary message of all cart items
+    items_summary = []
+    for item in cart:
+        items_summary.append(f"• {item['product'].name} (x{item['quantity']}) - ₹{item['total_price']:.2f}")
+
+    message_text = "Bulk Order Request from Cart:\n" + "\n".join(items_summary) + f"\n\nTotal Sum: ₹{cart.get_total_price():.2f}"
+
+    # Pick first product as main interested product reference if available
+    first_item = list(cart)[0]
+    main_product = first_item['product']
+
+    cust_name = request.user.get_full_name() or request.user.username if request.user.is_authenticated else "Shopping Customer"
+
+    enquiry = Enquiry.objects.create(
+        user=request.user if request.user.is_authenticated else None,
+        name=cust_name,
+        phone=request.user.email if (request.user.is_authenticated and request.user.email) else "Provided via Checkout",
+        product=main_product,
+        message=message_text
+    )
+
+    cart.clear()
+    messages.success(request, "Your cart order request has been logged as an official enquiry! We will reach out to you shortly.")
+    return redirect('enquiry_success', enquiry_id=enquiry.id)

@@ -203,3 +203,63 @@ class CustomerAuthTest(TestCase):
         self.assertEqual(auth_response.status_code, 200)
         self.assertTemplateUsed(auth_response, 'products/my_enquiries.html')
 
+
+class CartSystemTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.p1 = Product.objects.create(
+            name="Kumkumadi Face Serum",
+            description="Glowing serum",
+            price=499.00,
+            category="Skin Care"
+        )
+        self.p2 = Product.objects.create(
+            name="Triphala Tea",
+            description="Digestive tea",
+            price=199.00,
+            category="Herbal Care"
+        )
+
+    def test_cart_add_and_count(self):
+        # Add p1 (qty 2)
+        response = self.client.post(reverse('cart_add', kwargs={'product_id': self.p1.id}), {'quantity': 2})
+        self.assertRedirects(response, reverse('cart_detail'))
+
+        # Add p2 (qty 1)
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p2.id}), {'quantity': 1})
+
+        # Verify cart view
+        cart_response = self.client.get(reverse('cart_detail'))
+        self.assertEqual(cart_response.status_code, 200)
+        self.assertEqual(len(cart_response.context['cart']), 3)  # 2 + 1 = 3 items
+        self.assertEqual(cart_response.context['cart'].get_total_price(), 499.00 * 2 + 199.00)
+
+    def test_cart_update_and_remove(self):
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p1.id}), {'quantity': 1})
+        
+        # Update quantity to 5
+        self.client.post(reverse('cart_update', kwargs={'product_id': self.p1.id}), {'quantity': 5})
+        cart_response = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(cart_response.context['cart']), 5)
+
+        # Remove item
+        self.client.get(reverse('cart_remove', kwargs={'product_id': self.p1.id}))
+        cart_response_after = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(cart_response_after.context['cart']), 0)
+
+    def test_cart_checkout_whatsapp(self):
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p1.id}), {'quantity': 1})
+        response = self.client.get(reverse('cart_checkout_whatsapp'))
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('https://wa.me/', response.url)
+        self.assertIn('Kumkumadi%20Face%20Serum', response.url)
+
+    def test_cart_checkout_enquiry(self):
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p1.id}), {'quantity': 2})
+        response = self.client.get(reverse('cart_checkout_enquiry'))
+        self.assertEqual(Enquiry.objects.count(), 1)
+        enquiry = Enquiry.objects.first()
+        self.assertIn("Kumkumadi Face Serum", enquiry.message)
+        self.assertRedirects(response, reverse('enquiry_success', kwargs={'enquiry_id': enquiry.id}))
+
+

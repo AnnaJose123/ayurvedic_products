@@ -41,6 +41,14 @@
           <li><a href="{% if request.path == '/' %}#doshas{% else %}{% url 'home' %}#doshas{% endif %}" class="nav-link">Dosha Science</a></li>
           <li><a href="{% if request.path == '/' %}#products{% else %}{% url 'home' %}#products{% endif %}" class="nav-link">Products</a></li>
           <li><a href="{% if request.path == '/' %}#contact{% else %}{% url 'home' %}#contact{% endif %}" class="nav-link">Contact</a></li>
+          <li>
+            <a href="{% url 'cart_detail' %}" class="nav-link" style="position: relative; font-weight: 600; color: var(--color-brass);">
+              <i class="fas fa-shopping-cart"></i> Cart
+              {% if cart|length > 0 %}
+                <span style="background: #c92a2a; color: #FFFFFF; font-size: 0.75rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; margin-left: 4px;">{{ cart|length }}</span>
+              {% endif %}
+            </a>
+          </li>
           
           {% if user.is_authenticated %}
             <li><a href="{% url 'my_enquiries' %}" class="nav-link" style="color: var(--color-brass); font-weight: 600;"><i class="fas fa-list-alt"></i> My Enquiries</a></li>

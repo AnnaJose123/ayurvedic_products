@@ -40,12 +40,16 @@
         <p>{{ product.description }}</p>
       </div>
 
-      <div class="detail-actions">
-        <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn btn-whatsapp">
+      <div class="detail-actions" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <form action="{% url 'cart_add' product.id %}" method="post" style="display: flex; align-items: center; gap: 8px; margin: 0;">
+          {% csrf_token %}
+          <input type="number" name="quantity" value="1" min="1" max="99" style="width: 60px; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-weight: 700; text-align: center; font-size: 1rem;">
+          <button type="submit" class="magnetic-btn magnetic-btn-brass" style="padding: 12px 22px; font-size: 0.95rem; border-radius: 8px;">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+        </form>
+        <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn btn-whatsapp" style="padding: 12px 20px; font-size: 0.95rem;">
           <i class="fab fa-whatsapp"></i> Enquire on WhatsApp
-        </a>
-        <a href="{% url 'home' %}?enquire_product={{ product.id }}#enquiry" class="btn btn-primary">
-          <i class="fas fa-envelope"></i> Fill Enquiry Form
         </a>
       </div>
     </div>
