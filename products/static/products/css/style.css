@@ -817,11 +817,85 @@ body.cursor-hover .cursor-dot {
   transform: translateY(-4px) scale(1.04);
 }
 
-/* Responsive Styles */
+/* Responsive Styles & Utilities */
+.cart-layout-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.cart-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(246, 241, 226, 0.9);
+  border: 1px solid rgba(199, 154, 75, 0.3);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.cart-summary-card {
+  background: rgba(246, 241, 226, 0.95);
+  border: 1px solid rgba(199, 154, 75, 0.3);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 100px;
+}
+
+.form-grid-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.auth-card-wrapper {
+  background: rgba(246, 241, 226, 0.95);
+  border: 1px solid rgba(199, 154, 75, 0.3);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  backdrop-filter: blur(10px);
+}
+
+.dashboard-welcome-banner {
+  background: linear-gradient(135deg, rgba(46, 90, 39, 0.95), rgba(74, 124, 67, 0.9));
+  color: #FFFFFF;
+  border-radius: 16px;
+  padding: 35px 40px;
+  margin-bottom: 40px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
 @media (max-width: 1024px) {
   .split-hero-title { font-size: 2.8rem; }
   .dosha-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 992px) {
+  .cart-layout-grid {
+    grid-template-columns: 1fr;
+  }
+  .cart-summary-card {
+    position: static;
+  }
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -836,12 +910,51 @@ body.cursor-hover .cursor-dot {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 40px;
-    gap: 25px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    gap: 20px;
+    overflow-y: auto;
     transition: var(--transition-smooth);
   }
   .nav-links.active { left: 0; }
   .mobile-toggle { display: block; }
   .hero-grid, .enquiry-container { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-welcome-banner {
+    padding: 25px 20px;
+  }
+  .auth-card-wrapper {
+    padding: 25px 20px;
+  }
+  .cart-table-wrapper {
+    padding: 15px;
+  }
 }
+
+@media (max-width: 576px) {
+  .form-grid-two-col {
+    grid-template-columns: 1fr;
+  }
+  .floating-whatsapp-btn span {
+    display: none;
+  }
+  .floating-whatsapp-btn {
+    padding: 14px;
+    border-radius: 50%;
+  }
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  .detail-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .detail-actions form,
+  .detail-actions a {
+    width: 100%;
+  }
+}
+
