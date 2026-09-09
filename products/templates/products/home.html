@@ -1,0 +1,329 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}HerbaCare - Natural Care, Rooted in Ayurveda{% endblock %}
+
+{% block content %}
+<!-- 1. Hero / Home Section with Split-Text Cascading Rise-in -->
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="sub-badge reveal">
+        <i class="fas fa-seedling"></i> 100% Authentic Botanical Formulations
+      </div>
+      <h1 class="split-hero-title">
+        Natural Care Rooted in Ayurveda
+      </h1>
+      <p class="hero-text reveal">
+        Discover thoughtfully crafted Ayurvedic products made with nature-inspired ingredients for your everyday personal care routine.
+      </p>
+      <div class="hero-actions reveal">
+        <a href="#products" class="magnetic-btn magnetic-btn-brass">
+          <i class="fas fa-shopping-bag"></i> Explore Products
+        </a>
+        <a href="#enquiry" class="btn btn-outline-brass">
+          <i class="fas fa-paper-plane"></i> Enquire Now
+        </a>
+      </div>
+    </div>
+    
+    <div class="hero-image-wrap reveal">
+      <div class="hero-image-card">
+        <img src="{% static 'products/images/hero_ayurveda.jpg' %}" alt="HerbaCare Ayurvedic Personal Care Range" onerror="this.src='https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80';">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Infinite Marquee Loop (Pure CSS Keyframe Track) -->
+<div class="marquee-container">
+  <div class="marquee-track">
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Bhringraj</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Ashwagandha</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Chandan Sandalwood</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Organic Neem</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Shikakai Extract</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Pure Turmeric</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Wild Amla</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Cold-Pressed Sesame Oil</div>
+    <!-- Doubled Track for Continuous Loop -->
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Bhringraj</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Ashwagandha</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Chandan Sandalwood</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Organic Neem</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Shikakai Extract</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Pure Turmeric</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Wild Amla</div>
+    <div class="marquee-item"><i class="fas fa-leaf"></i> Cold-Pressed Sesame Oil</div>
+  </div>
+</div>
+
+<!-- 3. About the Brand Section -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-title-wrap reveal">
+      <span class="sub-badge">Our Heritage & Philosophy</span>
+      <h2 class="section-heading">Traditional Wisdom Meets Modern Personal Care</h2>
+      <p class="section-subtitle">
+        At HerbaCare, we believe that traditional Ayurvedic wisdom and modern personal care can come together naturally. Our products are created with carefully selected herbal ingredients designed for your everyday routine.
+      </p>
+    </div>
+
+    <div class="products-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="dosha-card reveal">
+        <div style="width: 44px; height: 44px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
+          <i class="fas fa-seedling"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Natural Ingredients</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">100% pure botanical extracts without harsh synthetic additives.</p>
+      </div>
+
+      <div class="dosha-card reveal">
+        <div style="width: 44px; height: 44px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
+          <i class="fas fa-mortar-pestle"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Ayurvedic Inspiration</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">Formulated using classic herbal recipes passed down through generations.</p>
+      </div>
+
+      <div class="dosha-card reveal">
+        <div style="width: 44px; height: 44px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Quality Focus</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">Rigorous quality control standards and dermatological testing.</p>
+      </div>
+
+      <div class="dosha-card reveal">
+        <div style="width: 44px; height: 44px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
+          <i class="fas fa-spa"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Everyday Wellness</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">Gentle daily nutrition for your hair, skin, and body care routine.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Dosha Science Data Visualizer Section -->
+<section class="section section-indigo" id="doshas">
+  <div class="container">
+    <div class="section-title-wrap reveal">
+      <span class="sub-badge">Tridosha Harmony</span>
+      <h2 class="section-heading">Custom Formulations by Dosha Type</h2>
+      <p class="section-subtitle">Ayurveda balances the three fundamental biological energies (Vata, Pitta, and Kapha) for holistic personal care.</p>
+    </div>
+
+    <div class="dosha-grid">
+      <div class="dosha-card vata reveal">
+        <span class="dosha-badge vata">Vata • Air & Ether</span>
+        <h3 class="dosha-title">Nourishing & Hydrating</h3>
+        <p class="dosha-desc">Deeply moisturizing sesame oil formulations enriched with Ashwagandha to calm dryness and promote vitality.</p>
+      </div>
+
+      <div class="dosha-card pitta reveal">
+        <span class="dosha-badge pitta">Pitta • Fire & Water</span>
+        <h3 class="dosha-title">Cooling & Soothing</h3>
+        <p class="dosha-desc">Sandalwood, Neem, and Turmeric extracts that soothe inflammation, balance heat, and refresh sensitive skin.</p>
+      </div>
+
+      <div class="dosha-card kapha reveal">
+        <span class="dosha-badge kapha">Kapha • Earth & Water</span>
+        <h3 class="dosha-title">Invigorating & Cleansing</h3>
+        <p class="dosha-desc">Light, detoxifying herbal blends infused with Shikakai and Amla to clarify skin pores and stimulate circulation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Dynamic Products Section -->
+<section class="section" id="products">
+  <div class="container">
+    <div class="section-title-wrap reveal">
+      <span class="sub-badge">Featured Range</span>
+      <h2 class="section-heading">Our Ayurvedic Formulations</h2>
+      <p class="section-subtitle">Explore our collection of dynamic database-backed personal care essentials.</p>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="category-filter reveal">
+      {% for cat in categories %}
+        <a href="{% if cat == 'All' %}{% url 'home' %}#products{% else %}{% url 'home' %}?category={{ cat|urlencode }}#products{% endif %}"
+           class="filter-btn {% if selected_category == cat %}active{% endif %}">
+          {{ cat }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- Dynamic Products Grid -->
+    <div class="products-grid">
+      {% for product in products %}
+        <div class="product-card reveal">
+          <div class="product-image-wrap">
+            <span class="category-badge">{{ product.category }}</span>
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+              <img src="{% static 'products/images/placeholder_product.jpg' %}" alt="{{ product.name }}" onerror="this.src='https://images.unsplash.com/photo-1608248597263-0007999659b0?auto=format&fit=crop&w=500&q=80';">
+            {% endif %}
+          </div>
+          
+          <div class="product-body">
+            <h3 class="product-title">
+              <a href="{% url 'product_detail' slug=product.slug %}">{{ product.name }}</a>
+            </h3>
+            <p class="product-desc">{{ product.description }}</p>
+            
+            <div class="product-footer">
+              <div class="product-price-row">
+                <span class="product-price">₹{{ product.price }}</span>
+                <span style="font-size: 0.82rem; color: var(--color-moss-soft); font-weight: 600;">
+                  <i class="fas fa-check-circle" style="color: var(--color-brass);"></i> Available
+                </span>
+              </div>
+
+              <div class="product-card-actions">
+                <a href="{% url 'product_detail' slug=product.slug %}" class="btn-card-details">
+                  View Details
+                </a>
+                <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn-card-wa">
+                  <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--color-ivory); border-radius: var(--radius-md);">
+          <i class="fas fa-box-open" style="font-size: 3rem; color: var(--color-brass); margin-bottom: 15px;"></i>
+          <h3 style="font-family: var(--font-heading);">No products found in this category</h3>
+          <p>Select another category filter to explore our formulations.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 6. Customer Enquiry Section -->
+<section class="section section-dark-ink" id="enquiry">
+  <div class="container">
+    <div class="enquiry-container reveal" style="background-color: var(--color-ink); border-color: rgba(199, 154, 75, 0.25);">
+      <div>
+        <span class="sub-badge">Customer Support & Orders</span>
+        <h2 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--color-ivory); margin-bottom: 16px;">
+          Product Enquiries & Custom Orders
+        </h2>
+        <p style="color: rgba(246, 241, 226, 0.8); font-size: 1.05rem; margin-bottom: 30px;">
+          Have a question about our Ayurvedic range or need bulk orders? Fill out the form below or chat directly on WhatsApp.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <i class="fas fa-check-circle" style="color: var(--color-brass); font-size: 1.2rem;"></i>
+            <span>Quick response within 2-4 business hours</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <i class="fas fa-check-circle" style="color: var(--color-brass); font-size: 1.2rem;"></i>
+            <span>Personalized Ayurvedic advice for your skin & hair type</span>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <i class="fas fa-check-circle" style="color: var(--color-brass); font-size: 1.2rem;"></i>
+            <span>Direct WhatsApp order confirmation option (+91 97782 56391)</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <form action="{% url 'home' %}#enquiry" method="POST" id="enquiryForm">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="id_name" class="form-label" style="color: var(--color-ivory);">Full Name *</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+              <span class="form-error">{{ form.name.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_phone" class="form-label" style="color: var(--color-ivory);">Phone Number *</label>
+            {{ form.phone }}
+            {% if form.phone.errors %}
+              <span class="form-error">{{ form.phone.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_product" class="form-label" style="color: var(--color-ivory);">Product of Interest</label>
+            {{ form.product }}
+            {% if form.product.errors %}
+              <span class="form-error">{{ form.product.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_message" class="form-label" style="color: var(--color-ivory);">Message / Enquiry *</label>
+            {{ form.message }}
+            {% if form.message.errors %}
+              <span class="form-error">{{ form.message.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="magnetic-btn magnetic-btn-brass" style="width: 100%;">
+            <i class="fas fa-paper-plane"></i> Submit Enquiry
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. Contact Section -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-title-wrap reveal">
+      <span class="sub-badge">Get In Touch</span>
+      <h2 class="section-heading">Contact Information</h2>
+      <p class="section-subtitle">We are always happy to connect with our customers and retail partners.</p>
+    </div>
+
+    <div class="products-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="dosha-card reveal" style="text-align: center;">
+        <div style="width: 50px; height: 50px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 16px auto;">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Visit Us</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">HerbaCare Ayurveda Labs<br>Herbal Valley Road, Kochi, Kerala - 682001</p>
+      </div>
+
+      <div class="dosha-card reveal" style="text-align: center;">
+        <div style="width: 50px; height: 50px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 16px auto;">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Call Us</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">+91 97782 56391<br>Mon - Sat: 9:00 AM - 6:00 PM</p>
+      </div>
+
+      <div class="dosha-card reveal" style="text-align: center;">
+        <div style="width: 50px; height: 50px; background: rgba(199, 154, 75, 0.15); color: var(--color-brass-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 16px auto;">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">Email Us</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft);">care@herbacare.com<br>orders@herbacare.com</p>
+      </div>
+
+      <div class="dosha-card reveal" style="text-align: center;">
+        <div style="width: 50px; height: 50px; background: rgba(37, 211, 102, 0.15); color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin: 0 auto 16px auto;">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-ink); margin-bottom: 8px;">WhatsApp Chat</h3>
+        <p style="font-size: 0.9rem; color: var(--color-moss-soft); margin-bottom: 12px;">+91 97782 56391<br>Available 24/7</p>
+        <a href="https://wa.me/{{ whatsapp_number|default:'919778256391' }}?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20Ayurvedic%20products."
+           target="_blank" rel="noopener" class="btn btn-whatsapp" style="padding: 8px 16px; font-size: 0.85rem; width: 100%;">
+          <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - HerbaCare Ayurvedic Products{% endblock %}
+
+{% block content %}
+<div class="container detail-container">
+  <a href="{% url 'home' %}#products" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Products
+  </a>
+
+  <div class="detail-grid">
+    <div class="detail-image-wrap">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}
+        <img src="{% static 'products/images/placeholder_product.jpg' %}" alt="{{ product.name }}" onerror="this.src='https://images.unsplash.com/photo-1608248597263-0007999659b0?auto=format&fit=crop&w=600&q=80';">
+      {% endif %}
+    </div>
+
+    <div class="detail-meta">
+      <span class="detail-category">{{ product.category }}</span>
+      <h1 class="detail-title">{{ product.name }}</h1>
+
+      <div class="detail-price-badge">
+        <span class="detail-price">₹{{ product.price }}</span>
+        {% if product.is_available %}
+          <span class="stock-status" style="font-size: 0.95rem;">
+            <span class="stock-dot"></span> In Stock & Ready to Dispatch
+          </span>
+        {% else %}
+          <span class="stock-status" style="color: #D32F2F;">
+            <i class="fas fa-times-circle"></i> Out of Stock
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="detail-description">
+        <h4 style="font-family: var(--font-heading); color: var(--dark-green); margin-bottom: 8px;">Product Overview</h4>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div class="detail-actions">
+        <a href="{{ product.whatsapp_url }}" target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <i class="fab fa-whatsapp"></i> Enquire on WhatsApp
+        </a>
+        <a href="{% url 'home' %}?enquire_product={{ product.id }}#enquiry" class="btn btn-primary">
+          <i class="fas fa-envelope"></i> Fill Enquiry Form
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if related_products %}
+    <div class="section" style="padding-top: 60px;">
+      <div class="section-title-wrap" style="margin-bottom: 30px;">
+        <span class="sub-badge">More from {{ product.category }}</span>
+        <h3 class="section-heading" style="font-size: 1.8rem;">You May Also Like</h3>
+      </div>
+
+      <div class="products-grid">
+        {% for rel in related_products %}
+          <div class="product-card">
+            <div class="product-image-wrap">
+              <span class="category-badge">{{ rel.category }}</span>
+              {% if rel.image %}
+                <img src="{{ rel.image.url }}" alt="{{ rel.name }}">
+              {% else %}
+                <img src="{% static 'products/images/placeholder_product.jpg' %}" alt="{{ rel.name }}" onerror="this.src='https://images.unsplash.com/photo-1608248597263-0007999659b0?auto=format&fit=crop&w=500&q=80';">
+              {% endif %}
+            </div>
+            
+            <div class="product-body">
+              <h4 class="product-title">
+                <a href="{% url 'product_detail' slug=rel.slug %}">{{ rel.name }}</a>
+              </h4>
+              <p class="product-desc">{{ rel.description }}</p>
+              
+              <div class="product-footer">
+                <div class="product-price-row">
+                  <span class="product-price">₹{{ rel.price }}</span>
+                </div>
+                <div class="product-card-actions">
+                  <a href="{% url 'product_detail' slug=rel.slug %}" class="btn-card-details">
+                    <i class="fas fa-eye"></i> View Details
+                  </a>
+                  <a href="{{ rel.whatsapp_url }}" target="_blank" rel="noopener" class="btn-card-wa">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

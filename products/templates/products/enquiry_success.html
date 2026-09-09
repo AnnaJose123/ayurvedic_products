@@ -1,0 +1,58 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Enquiry Submitted Successfully | HerbaCare{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="success-card">
+    <div class="success-icon">
+      <i class="fas fa-check-circle"></i>
+    </div>
+    <h1 class="success-title">Enquiry Submitted!</h1>
+    <p class="success-subtitle">
+      Thank you for contacting HerbaCare. Your enquiry has been received and logged in our system. We will contact you soon.
+    </p>
+
+    <div class="summary-box">
+      <h4 style="font-family: var(--font-heading); color: var(--dark-green); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+        Enquiry Summary
+      </h4>
+      <div class="summary-row">
+        <span class="summary-label">Name:</span>
+        <span class="summary-val">{{ enquiry.name }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Phone:</span>
+        <span class="summary-val">{{ enquiry.phone }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Product:</span>
+        <span class="summary-val">{% if enquiry.product %}{{ enquiry.product.name }}{% else %}General Product Enquiry{% endif %}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Message:</span>
+        <span class="summary-val">{{ enquiry.message }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Submitted:</span>
+        <span class="summary-val">{{ enquiry.created_at|date:"F d, Y - h:i A" }}</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a href="{{ whatsapp_url }}" target="_blank" rel="noopener" class="btn btn-whatsapp">
+        <i class="fab fa-whatsapp"></i> Send via WhatsApp Now
+      </a>
+      <a href="{% url 'home' %}#products" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Return to Products
+      </a>
+    </div>
+  </div>
+</div>
+{% block extra_js %}
+<script>
+  // Optional smooth scroll to top of success card
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+</script>
+{% endblock %}
+{% endblock %}

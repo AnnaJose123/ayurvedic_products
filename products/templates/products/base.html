@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}HerbaCare | Natural Care, Rooted in Ayurveda{% endblock %}</title>
+  <meta name="description" content="Discover premium Ayurvedic personal care products blending traditional herbal wisdom with modern daily wellness.">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Style System -->
+  <link rel="stylesheet" href="{% static 'products/css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- 1. Preloader Screen -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-count" id="preloaderCount">0%</div>
+    <div class="preloader-label">HerbaCare • Ayurvedic Wellness</div>
+  </div>
+
+  <!-- 2. Lerped Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Navigation Bar -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="{% url 'home' %}" class="brand-logo" id="brandLogo">
+        <i class="fas fa-leaf"></i>
+        <span>HerbaCare</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="{% if request.path == '/' %}#home{% else %}{% url 'home' %}#home{% endif %}" class="nav-link">Home</a></li>
+          <li><a href="{% if request.path == '/' %}#about{% else %}{% url 'home' %}#about{% endif %}" class="nav-link">About</a></li>
+          <li><a href="{% if request.path == '/' %}#doshas{% else %}{% url 'home' %}#doshas{% endif %}" class="nav-link">Dosha Science</a></li>
+          <li><a href="{% if request.path == '/' %}#products{% else %}{% url 'home' %}#products{% endif %}" class="nav-link">Products</a></li>
+          <li><a href="{% if request.path == '/' %}#contact{% else %}{% url 'home' %}#contact{% endif %}" class="nav-link">Contact</a></li>
+          <li>
+            <a href="{% if request.path == '/' %}#enquiry{% else %}{% url 'home' %}#enquiry{% endif %}" class="magnetic-btn magnetic-btn-brass" style="padding: 10px 24px; font-size: 0.9rem;">
+              Enquire Now
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Block -->
+  <main id="mainContent">
+    {% if messages %}
+      <div class="container" style="margin-top: 20px;">
+        {% for message in messages %}
+          <div class="alert-message alert-{{ message.tags }}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Description -->
+        <div class="footer-brand">
+          <a href="{% url 'home' %}" class="brand-logo">
+            <i class="fas fa-leaf"></i>
+            <span>HerbaCare</span>
+          </a>
+          <p class="footer-desc">
+            Thoughtfully crafted Ayurvedic personal care products blending ancient herbal wisdom with modern everyday wellness routines.
+          </p>
+          <div style="display: flex; gap: 12px;">
+            <a href="https://wa.me/{{ whatsapp_number|default:'919778256391' }}" class="magnetic-btn btn-whatsapp" target="_blank" rel="noopener" style="padding: 8px 18px; font-size: 0.85rem;">
+              <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 style="font-family: var(--font-heading); color: #FFFFFF; margin-bottom: 20px; font-size: 1.2rem;">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}#home" class="footer-link">Home</a></li>
+            <li><a href="{% url 'home' %}#about" class="footer-link">About Us</a></li>
+            <li><a href="{% url 'home' %}#doshas" class="footer-link">Dosha Science</a></li>
+            <li><a href="{% url 'home' %}#products" class="footer-link">Ayurvedic Products</a></li>
+            <li><a href="{% url 'home' %}#enquiry" class="footer-link">Submit Enquiry</a></li>
+          </ul>
+        </div>
+
+        <!-- Categories -->
+        <div>
+          <h4 style="font-family: var(--font-heading); color: #FFFFFF; margin-bottom: 20px; font-size: 1.2rem;">Categories</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'home' %}?category=Hair+Care#products" class="footer-link">Hair Care</a></li>
+            <li><a href="{% url 'home' %}?category=Skin+Care#products" class="footer-link">Skin Care</a></li>
+            <li><a href="{% url 'home' %}?category=Body+Care#products" class="footer-link">Body Care</a></li>
+            <li><a href="{% url 'home' %}?category=Herbal+Care#products" class="footer-link">Herbal Care</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h4 style="font-family: var(--font-heading); color: #FFFFFF; margin-bottom: 20px; font-size: 1.2rem;">Get in Touch</h4>
+          <ul class="footer-links">
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <i class="fas fa-map-marker-alt" style="margin-top: 4px; color: var(--color-brass);"></i>
+              <span>HerbaCare Ayurveda Labs, Herbal Valley Road, Kerala, India - 682001</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: center;">
+              <i class="fas fa-phone-alt" style="color: var(--color-brass);"></i>
+              <span>+91 97782 56391</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: center;">
+              <i class="fas fa-envelope" style="color: var(--color-brass);"></i>
+              <span>care@herbacare.com</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: center;">
+              <i class="fab fa-whatsapp" style="color: #25D366;"></i>
+              <span>WhatsApp: +91 97782 56391</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(199, 154, 75, 0.2); padding-top: 25px; text-align: center; font-size: 0.9rem; color: rgba(246, 241, 226, 0.6);">
+        <p>&copy; 2026 HerbaCare. All Rights Reserved. Rooted in Authentic Ayurvedic Wisdom.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Contact on WhatsApp Button -->
+  <a href="https://wa.me/{{ whatsapp_number|default:'919778256391' }}?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20your%20Ayurvedic%20products."
+     class="floating-whatsapp-btn"
+     target="_blank"
+     rel="noopener"
+     title="Contact on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span>Contact on WhatsApp</span>
+  </a>
+
+  <!-- Scripts -->
+  <script src="{% static 'products/js/script.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
