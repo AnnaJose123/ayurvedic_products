@@ -134,3 +134,72 @@ class WhatsAppUtilsTest(TestCase):
         url = generate_enquiry_whatsapp_url(enquiry)
         self.assertIn("Suresh%20Kumar", url)
         self.assertIn("Ayurvedic%20Body%20Oil", url)
+
+
+class CustomerAuthTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        from django.contrib.auth.models import User
+        self.user = User.objects.create_user(
+            username='testcustomer',
+            email='customer@example.com',
+            password='TestPassword123!',
+            first_name='Rahul',
+            last_name='Sharma'
+        )
+        self.product = Product.objects.create(
+            name="Herbal Hair Oil Test",
+            description="Nourishing hair oil",
+            price=299.00,
+            category="Hair Care"
+        )
+
+    def test_registration_view(self):
+        post_data = {
+            'username': 'newcustomer',
+            'first_name': 'Ananya',
+            'last_name': 'Roy',
+            'email': 'ananya@example.com',
+            'password1': 'NewPassword123!',
+            'password2': 'NewPassword123!',
+        }
+        response = self.client.post(reverse('register'), post_data)
+        self.assertRedirects(response, reverse('my_enquiries'))
+        from django.contrib.auth.models import User
+        self.assertTrue(User.objects.filter(username='newcustomer').exists())
+
+    def test_login_and_logout_view(self):
+        login_data = {
+            'username': 'testcustomer',
+            'password': 'TestPassword123!',
+        }
+        response = self.client.post(reverse('login'), login_data)
+        self.assertRedirects(response, reverse('my_enquiries'))
+
+        logout_response = self.client.get(reverse('logout'))
+        self.assertRedirects(logout_response, reverse('home'))
+
+    def test_authenticated_enquiry_linking(self):
+        self.client.login(username='testcustomer', password='TestPassword123!')
+        post_data = {
+            'name': 'Rahul Sharma',
+            'phone': '9876543210',
+            'product': self.product.id,
+            'message': 'Enquiry from logged in user.'
+        }
+        response = self.client.post(reverse('home'), post_data)
+        self.assertEqual(Enquiry.objects.count(), 1)
+        enquiry = Enquiry.objects.first()
+        self.assertEqual(enquiry.user, self.user)
+
+    def test_my_enquiries_protected_view(self):
+        # Unauthenticated access should redirect to login
+        unauth_response = self.client.get(reverse('my_enquiries'))
+        self.assertRedirects(unauth_response, f"{reverse('login')}?next={reverse('my_enquiries')}")
+
+        # Authenticated access
+        self.client.login(username='testcustomer', password='TestPassword123!')
+        auth_response = self.client.get(reverse('my_enquiries'))
+        self.assertEqual(auth_response.status_code, 200)
+        self.assertTemplateUsed(auth_response, 'products/my_enquiries.html')
+

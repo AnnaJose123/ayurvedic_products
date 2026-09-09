@@ -41,11 +41,24 @@
           <li><a href="{% if request.path == '/' %}#doshas{% else %}{% url 'home' %}#doshas{% endif %}" class="nav-link">Dosha Science</a></li>
           <li><a href="{% if request.path == '/' %}#products{% else %}{% url 'home' %}#products{% endif %}" class="nav-link">Products</a></li>
           <li><a href="{% if request.path == '/' %}#contact{% else %}{% url 'home' %}#contact{% endif %}" class="nav-link">Contact</a></li>
-          <li>
-            <a href="{% if request.path == '/' %}#enquiry{% else %}{% url 'home' %}#enquiry{% endif %}" class="magnetic-btn magnetic-btn-brass" style="padding: 10px 24px; font-size: 0.9rem;">
-              Enquire Now
-            </a>
-          </li>
+          
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'my_enquiries' %}" class="nav-link" style="color: var(--color-brass); font-weight: 600;"><i class="fas fa-list-alt"></i> My Enquiries</a></li>
+            <li><a href="{% url 'logout' %}" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li>
+              <span style="background: rgba(199, 154, 75, 0.15); border: 1px solid rgba(199, 154, 75, 0.3); color: var(--color-gold); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                <i class="fas fa-user-circle"></i> {{ user.first_name|default:user.username }}
+              </span>
+            </li>
+          {% else %}
+            <li><a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="{% url 'register' %}" class="nav-link" style="color: var(--color-brass); font-weight: 600;"><i class="fas fa-user-plus"></i> Register</a></li>
+            <li>
+              <a href="{% if request.path == '/' %}#enquiry{% else %}{% url 'home' %}#enquiry{% endif %}" class="magnetic-btn magnetic-btn-brass" style="padding: 10px 24px; font-size: 0.9rem;">
+                Enquire Now
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </nav>
 

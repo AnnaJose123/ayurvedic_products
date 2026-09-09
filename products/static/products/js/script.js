@@ -11,26 +11,57 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   /* -------------------------------------------------------------------------- */
-  /* 1. PRELOADER COUNTDOWN & TEAR-AWAY                                        */
+  /* 1. PRELOADER COUNTDOWN & TEAR-AWAY (ONLY ON INITIAL LOAD OR REFRESH)       */
   /* -------------------------------------------------------------------------- */
   const preloader = document.getElementById('preloader');
   const preloaderCount = document.getElementById('preloaderCount');
 
-  if (preloader && preloaderCount) {
-    let count = 0;
-    const interval = setInterval(() => {
-      count += Math.floor(Math.random() * 12) + 5;
-      if (count >= 100) {
-        count = 100;
-        clearInterval(interval);
-        setTimeout(() => {
-          preloader.classList.add('loaded');
-          // Trigger hero split-text animation after preloader exit
-          initSplitTextHero();
-        }, 300);
+  // Detect browser refresh vs internal navigation
+  const navEntries = performance.getEntriesByType('navigation');
+  const navType = navEntries.length > 0 ? navEntries[0].type : '';
+  const isReload = navType === 'reload';
+  const isInternalNav = sessionStorage.getItem('is_internal_navigation') === 'true';
+
+  // Reset internal navigation flag
+  sessionStorage.removeItem('is_internal_navigation');
+
+  // Track clicks on internal links to mark internal navigation
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (link && link.href && link.origin === window.location.origin) {
+      if (link.pathname !== window.location.pathname || link.search !== window.location.search) {
+        sessionStorage.setItem('is_internal_navigation', 'true');
       }
-      preloaderCount.textContent = count + '%';
-    }, 45);
+    }
+  });
+
+  // Track form submissions
+  document.addEventListener('submit', () => {
+    sessionStorage.setItem('is_internal_navigation', 'true');
+  });
+
+  if (preloader && preloaderCount) {
+    // Show counting preloader animation ONLY on initial site visit or browser refresh (F5)
+    if (!isInternalNav || isReload) {
+      let count = 0;
+      const interval = setInterval(() => {
+        count += Math.floor(Math.random() * 12) + 5;
+        if (count >= 100) {
+          count = 100;
+          clearInterval(interval);
+          setTimeout(() => {
+            preloader.classList.add('loaded');
+            initSplitTextHero();
+          }, 300);
+        }
+        preloaderCount.textContent = count + '%';
+      }, 45);
+    } else {
+      // Skip preloader instantly for smooth internal page navigation
+      preloader.style.display = 'none';
+      preloader.classList.add('loaded');
+      initSplitTextHero();
+    }
   } else {
     initSplitTextHero();
   }

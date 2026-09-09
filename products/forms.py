@@ -1,6 +1,87 @@
 import re
 from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Enquiry, Product
+
+
+class CustomerRegistrationForm(UserCreationForm):
+    first_name = forms.CharField(
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'First Name',
+            'id': 'id_first_name'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Last Name (Optional)',
+            'id': 'id_last_name'
+        })
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Email Address',
+            'id': 'id_email'
+        })
+    )
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Choose a Username',
+                'id': 'id_username'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'password1' in self.fields:
+            self.fields['password1'].widget.attrs.update({
+                'class': 'form-input',
+                'placeholder': 'Create Password',
+                'id': 'id_password1'
+            })
+        if 'password2' in self.fields:
+            self.fields['password2'].widget.attrs.update({
+                'class': 'form-input',
+                'placeholder': 'Confirm Password',
+                'id': 'id_password2'
+            })
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("An account with this email address already exists.")
+        return email
+
+
+class CustomerLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Enter Username or Email',
+            'id': 'id_login_username'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Enter Password',
+            'id': 'id_login_password'
+        })
+    )
+
 
 class EnquiryForm(forms.ModelForm):
     product = forms.ModelChoiceField(
@@ -69,3 +150,4 @@ class EnquiryForm(forms.ModelForm):
         if len(message) > 1000:
             raise forms.ValidationError("Message is too long (maximum 1000 characters).")
         return message
+
