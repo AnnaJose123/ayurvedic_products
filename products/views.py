@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Product, Enquiry, CATEGORY_CHOICES
+from .models import Product, Enquiry, CATEGORY_CHOICES, CartItem
 from .forms import EnquiryForm, CustomerRegistrationForm, CustomerLoginForm
 from .utils import (
     generate_product_whatsapp_url,
@@ -139,6 +139,8 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            cart = Cart(request)
+            cart.merge_on_login(user)
             messages.success(request, f"Welcome to HerbaCare, {user.first_name or user.username}! Account created successfully.")
             return redirect('my_enquiries')
         else:
@@ -156,7 +158,7 @@ def register_view(request):
 def login_view(request):
     """
     Customer Login View (`/login/`).
-    Authenticates existing customer account.
+    Authenticates existing customer account and restores saved shopping cart.
     """
     if request.user.is_authenticated:
         return redirect('my_enquiries')
@@ -168,6 +170,8 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            cart = Cart(request)
+            cart.merge_on_login(user)
             messages.success(request, f"Welcome back, {user.first_name or user.username}!")
             return redirect(redirect_to)
         else:
@@ -185,8 +189,11 @@ def login_view(request):
 def logout_view(request):
     """
     Customer Logout View (`/logout/`).
-    Logs out current session.
+    Saves cart items to DB before logging out session.
     """
+    if request.user.is_authenticated:
+        cart = Cart(request)
+        cart._sync_to_db()
     logout(request)
     messages.info(request, "You have been logged out successfully. Visit us again!")
     return redirect('home')

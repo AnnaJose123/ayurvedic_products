@@ -71,3 +71,18 @@ class Enquiry(models.Model):
     def __str__(self):
         product_name = self.product.name if self.product else "General Enquiry"
         return f"Enquiry by {self.name} for {product_name} - {self.created_at.strftime('%b %d, %Y')}"
+
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart_items', null=True, blank=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items')
+    quantity = models.PositiveIntegerField(default=1)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated_at']
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f"{self.user.username if self.user else 'Guest'} - {self.product.name} (x{self.quantity})"
+

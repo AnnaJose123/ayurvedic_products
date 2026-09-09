@@ -262,4 +262,40 @@ class CartSystemTest(TestCase):
         self.assertIn("Kumkumadi Face Serum", enquiry.message)
         self.assertRedirects(response, reverse('enquiry_success', kwargs={'enquiry_id': enquiry.id}))
 
+    def test_cart_persistence_across_login_logout(self):
+        from django.contrib.auth.models import User
+        user = User.objects.create_user(username='persistentuser', password='Password123!')
+        
+        # Log in and add product to cart
+        self.client.login(username='persistentuser', password='Password123!')
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p1.id}), {'quantity': 3})
+        
+        # Log out (flushes session)
+        self.client.get(reverse('logout'))
+        
+        # Cart should be empty for guest after logout
+        guest_cart = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(guest_cart.context['cart']), 0)
+
+        # Log back in: cart items should be restored automatically from DB!
+        self.client.login(username='persistentuser', password='Password123!')
+        restored_cart = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(restored_cart.context['cart']), 3)
+
+    def test_guest_cart_merges_on_login(self):
+        from django.contrib.auth.models import User
+        user = User.objects.create_user(username='mergeuser', password='Password123!')
+        
+        # Add item as guest
+        self.client.post(reverse('cart_add', kwargs={'product_id': self.p2.id}), {'quantity': 2})
+        
+        # Log in via login view
+        self.client.post(reverse('login'), {'username': 'mergeuser', 'password': 'Password123!'})
+        
+        # Cart should retain the guest item after logging in
+        logged_in_cart = self.client.get(reverse('cart_detail'))
+        self.assertEqual(len(logged_in_cart.context['cart']), 2)
+
+
+
 
